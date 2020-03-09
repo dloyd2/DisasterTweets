@@ -10,6 +10,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
+def run(train, labels, test):
+    print('do pytorch stuff now')
+
 def get_datasets(filepath, train_ratio = 0.80):
     data = pd.read_csv(filepath)
     train_data = data.sample(frac = train_ratio)
