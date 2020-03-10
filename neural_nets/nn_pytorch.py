@@ -40,8 +40,9 @@ class TweetNet(nn.Module):
         return x
 
 tNet = TweetNet(3, 3) #temporary values
+print(tNet)
 
-def train(trainset, epochs = 3, net -> TweetNet):
+def train(trainset, net, epochs = 3):
     optimizer = optim.Adam(net.paramters(), lr = 1e-5) #Adam algorithm
     for epoch in range(epochs):
         for data in trainset:
@@ -51,4 +52,3 @@ def train(trainset, epochs = 3, net -> TweetNet):
             loss = F.binary_cross_entropy(output, y)
             loss.backward()
             optimizer.step()
-            
