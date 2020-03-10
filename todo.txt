@@ -1,0 +1,24 @@
+Daniel:
+    logger
+    change args of final.py to:
+        --all
+        --lr
+        --svm
+        --knn
+        --dt
+        --nn?
+        --nb
+        --rf
+        --test
+    watch video about naive bayes
+    data cleaning
+
+Matt:
+    learn scikit-learn to the point to which he can explain it easily to us
+    logistic regression model done
+    naive bayes done
+    knn model done 
+    svm model done
+
+Will: 
+    
