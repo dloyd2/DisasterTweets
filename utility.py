@@ -1,11 +1,12 @@
 '''
     Daniel Loyd
 '''
-import re
+import re, os
 import numpy as np
 from nltk.corpus import stopwords
 import nltk
 from tensorflow.keras.preprocessing.text import Tokenizer
+LOCATION = os.path.dirname(os.path.abspath(__file__))
 #nltk.download('stopwords')
 eng_stopwords = set(stopwords.words('english'))
 

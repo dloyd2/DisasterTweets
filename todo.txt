@@ -1,5 +1,5 @@
 Daniel:
-    logger
+    
     watch video about naive bayes
     data cleaning
 
