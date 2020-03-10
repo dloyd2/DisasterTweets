@@ -1,15 +1,5 @@
 Daniel:
     logger
-    change args of final.py to:
-        --all
-        --lr
-        --svm
-        --knn
-        --dt
-        --nn?
-        --nb
-        --rf
-        --test
     watch video about naive bayes
     data cleaning
 

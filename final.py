@@ -6,7 +6,17 @@ from neural_nets.nn_keras import run as run_keras
 #from neural_nets.nn_pytorch import run as run_pytorch
 import utility
 parser = argparse.ArgumentParser()
-parser.add_argument('-t', help='type of neural net to run(keras or pytorch)')
+parser.add_argument('--all', help='run all algorithms')
+parser.add_argument('--lr', help='run the logistic regression algorithm')
+parser.add_argument('--svm', help='run the support vector machine algorithm')
+parser.add_argument('--knn', help='run the k nearest neighbor algorithm')
+parser.add_argument('--dt', help='run the decision tree algorithm')
+parser.add_argument('--nb', help='run the naive bayes algorithm')
+parser.add_argument('--rf', help='run the random forest algorithm')
+parser.add_argument('--nn', help='run the neural net algorithm')
+parser.add_argument('--test', help='produce a prediction for the test data and store to a file')
+
+parser.add_argument('--filename', help='if test flag is enabled, specify the name of the output file.')
 parser.add_argument('--path', help='path to the data to be used')
 args = parser.parse_args()
 
