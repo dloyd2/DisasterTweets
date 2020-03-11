@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 from MLutils import separateOutput
 from MLutils import gen_rand_data
-from sklearn.linear_model import SGDClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 #from DisasterTweets.log import get_logger
 #from DisasterTweets.utility import LOCATION
@@ -31,8 +31,19 @@ def get_datasets(filepath, train_ratio = 0.80):
     heldout_data = data.loc[~data.index.isin(train_data.index)]
     return train_data, heldout_data
 
+# TODO: Change to SVM
+def learn(train, target, heldout_data, heldout_target):
+    ker = 'linear'
+    clf = SVC(kernel = ker)
+    clf.fit(train, target)
+    if(ker == 'linear'):
+        print("Weights: ", clf.coef_)
+    predictData = clf.predict(heldout_data)
+    print("Accuracy Score: ", accuracy_score(predictData, heldout_target))
+    return clf
+
 #try using base ML algorithm with randomly generated data
-def tryLRWithRand():
+def trySVMWithRand():
     data = gen_rand_data(1000, 5)
     train_df = data.sample(frac = 0.80)
     heldout_df = data.loc[~data.index.isin(train_df.index)]
@@ -40,14 +51,5 @@ def tryLRWithRand():
     heldout_df, heldoutOut_df = separateOutput(heldout_df)
     learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
 
-# TODO: Implement LR algorithm
-def learn(train, target, heldout_data, heldout_target):
-    clf = SGDClassifier(loss = 'log', max_iter = 1000)
-    clf.fit(train, target)
-    print("Weights: ", clf.coef_)
-    predictData = clf.predict(heldout_data)
-    print("Accuracy Score: ", accuracy_score(predictData, heldout_target))
-    return clf
-
 if(testWithRandData):
-    tryLRWithRand()
+    trySVMWithRand()
