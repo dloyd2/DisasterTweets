@@ -1,6 +1,7 @@
 '''
     Matt Briones
     Last Modified: Mar10, 2020
+    Description: Implements logistic regression using scikit-learn
 '''
 
 
@@ -11,10 +12,10 @@ from MLutils import gen_rand_data
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-#from DisasterTweets.log import get_logger
-#from DisasterTweets.utility import LOCATION
+from DisasterTweets.log import get_logger
+from DisasterTweets.utility import LOCATION
 
-#logger = get_logger('lr')
+logger = get_logger('lr')
 
 testWithRandData = True
 
@@ -42,7 +43,7 @@ def tryLRWithRand():
 
 # TODO: Implement LR algorithm
 def learn(train, target, heldout_data, heldout_target):
-    clf = SGDClassifier(loss = 'log', max_iter = 1000)
+    clf = SGDClassifier(loss = 'log', max_iter = 1000, verbose = 1)
     clf.fit(train, target)
     print("Weights: ", clf.coef_)
     predictData = clf.predict(heldout_data)

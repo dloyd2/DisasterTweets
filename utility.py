@@ -18,17 +18,17 @@ def simplify_tweet(tweet):
     Returns a list of these features
     '''
     tweet = tweet.lstrip().rstrip()
-    
+
     # remove the links from the tweet (thanks to )
     tweet = re.sub("http:\S+", "", tweet)
     tweet = re.sub("https:\S+", "", tweet)
     tweet = re.sub(r"[,.;#?!&$:]+\ *", " ", tweet)
     tweet = tweet.replace("  ", " ")
     tweet = tweet.lower()
-    
+
     tweet = tweet.replace('...', ' ... ').strip()
-    tweet = tweet.replace("'", " ' ").strip()        
-    
+    tweet = tweet.replace("'", " ' ").strip()
+
     # Special characters
     tweet = re.sub(r"\x89Û_", "", tweet)
     tweet = re.sub(r"\x89ÛÒ", "", tweet)
@@ -46,11 +46,11 @@ def simplify_tweet(tweet):
     tweet = re.sub(r"fromåÊwounds", "from wounds", tweet)
     tweet = re.sub(r"åÊ", "", tweet)
     tweet = re.sub(r"åÈ", "", tweet)
-    tweet = re.sub(r"JapÌ_n", "Japan", tweet)    
+    tweet = re.sub(r"JapÌ_n", "Japan", tweet)
     tweet = re.sub(r"Ì©", "e", tweet)
     tweet = re.sub(r"å¨", "", tweet)
     tweet = re.sub(r"SuruÌ¤", "Suruc", tweet)
-    
+
     # Contractions
     tweet = re.sub(r"he's", "he is", tweet)
     tweet = re.sub(r"there's", "there is", tweet)
@@ -119,12 +119,12 @@ def simplify_tweet(tweet):
     tweet = re.sub(r"you\x89Ûªll", "you will", tweet)
     tweet = re.sub(r"I\x89Ûªd", "I would", tweet)
     tweet = re.sub(r"let's", "let us", tweet)
-    
+
     # Character entity references
     tweet = re.sub(r"&gt;", ">", tweet)
     tweet = re.sub(r"&lt;", "<", tweet)
     tweet = re.sub(r"&amp;", "&", tweet)
-        
+
     # Typos, slang and informal abbreviations
     tweet = re.sub(r"w/e", "whatever", tweet)
     tweet = re.sub(r"w/", "with", tweet)
@@ -141,7 +141,7 @@ def simplify_tweet(tweet):
     tweet = re.sub(r"8/6/2015", "2015-08-06", tweet)
     tweet = re.sub(r"10:38PM", "10:38 PM", tweet)
     tweet = re.sub(r"10:30pm", "10:30 PM", tweet)
-    
+
     # Separating other punctuations
     tweet = re.sub(r"MH370:", "MH370 :", tweet)
     tweet = re.sub(r"PM:", "Prime Minister :", tweet)
@@ -278,12 +278,12 @@ def simplify_tweet(tweet):
     tweet = re.sub(r"Home:", "Home :", tweet)
     tweet = re.sub(r"Earth:", "Earth :", tweet)
     tweet = re.sub(r"three:", "three :", tweet)
-    
+
     # Hashtags and usernames
     tweet = re.sub(r"IranDeal", "Iran Deal", tweet)
     tweet = re.sub(r"ArianaGrande", "Ariana Grande", tweet)
-    tweet = re.sub(r"camilacabello97", "camila cabello", tweet) 
-    tweet = re.sub(r"RondaRousey", "Ronda Rousey", tweet)     
+    tweet = re.sub(r"camilacabello97", "camila cabello", tweet)
+    tweet = re.sub(r"RondaRousey", "Ronda Rousey", tweet)
     tweet = re.sub(r"MTVHottest", "MTV Hottest", tweet)
     tweet = re.sub(r"TrapMusic", "Trap Music", tweet)
     tweet = re.sub(r"ProphetMuhammad", "Prophet Muhammad", tweet)
@@ -345,14 +345,14 @@ def simplify_tweet(tweet):
     tweet = re.sub(r"jimmyfallon", "jimmy fallon", tweet)
 
     words = [x.lstrip().rstrip() for x in tweet.split()]
-    
+
     # remove all the stop words
     words = [x for x in words if x and x not in eng_stopwords]
-    
+
     # check if tweet is not empty
     if not words:
         return ""
-    
+
     # replace words with their stem words: https://www.nltk.org/howto/stem.html
     # words = [stemmer.stem(x) for x in words]
 
@@ -361,7 +361,7 @@ def simplify_tweet(tweet):
 
     tweet = " ".join(words)
     tweet = re.sub(r"[,.;@#?!&$:]+\ *", " ", tweet)
-    
+
     # now we can return the valid tweet
     return tweet
 
@@ -369,4 +369,3 @@ def tokenize(data):
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(data)
     return np.array([np.array(data) for data in tokenizer.texts_to_sequences(data)])
-
