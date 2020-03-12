@@ -2,13 +2,83 @@
     Daniel Loyd
 '''
 import re, os
+import string
+from spellchecker import SpellChecker
+
 import numpy as np
 from nltk.corpus import stopwords
-import nltk
-from tensorflow.keras.preprocessing.text import Tokenizer
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+
+from DisasterTweets.log import get_logger
 LOCATION = os.path.dirname(os.path.abspath(__file__))
+log = get_logger('misc')
+import nltk
 #nltk.download('stopwords')
+#nltk.download('punkt')
 eng_stopwords = set(stopwords.words('english'))
+
+def remove_URL(text):
+    url = re.compile(r'https?://\S+|www\.\S+')
+    return url.sub(r'',text)
+
+def remove_html(text):
+    html=re.compile(r'<.*?>')
+    return html.sub(r'',text)
+
+def remove_emoji(text):
+    emoji_pattern = re.compile("["
+                           u"\U0001F600-\U0001F64F"  # emoticons
+                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           u"\U00002702-\U000027B0"
+                           u"\U000024C2-\U0001F251"
+                           "]+", flags=re.UNICODE)
+    return emoji_pattern.sub(r'', text)
+
+def remove_punct(text):
+    table=str.maketrans('','',string.punctuation)
+    return text.translate(table)
+
+spell = SpellChecker()
+def correct_spellings(text):
+    corrected_text = []
+    misspelled_words = spell.unknown(text.split())
+    for word in text.split():
+        if word in misspelled_words:
+            corrected_text.append(spell.correction(word))
+        else:
+            corrected_text.append(word)
+    return " ".join(corrected_text)
+
+def remove_stopwords(text):
+    from nltk import word_tokenize
+    words = word_tokenize(text)
+    new_text = [word for word in words if word not in eng_stopwords]
+    return " ".join(new_text)
+
+def clean_tweet(tweet):
+    '''
+    tweet -> str
+
+    Given a tweet, clean it by removing undesired features.
+    Returns the cleaned tweet
+    '''
+    tweet = tweet.lower()
+    tweet = remove_URL(tweet)
+    tweet = remove_html(tweet)
+    tweet = remove_emoji(tweet)
+    tweet = remove_punct(tweet)
+    tweet = correct_spellings(tweet)
+    tweet = remove_stopwords(tweet)
+    return tweet
+
+def tokenize_tweets(tweets, max_len=30):
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(tweets)
+    sequences = tokenizer.texts_to_sequences(tweets)
+    return pad_sequences(sequences, maxlen=max_len, truncating='post', padding='post')
 
 def simplify_tweet(tweet):
     '''
@@ -364,8 +434,3 @@ def simplify_tweet(tweet):
 
     # now we can return the valid tweet
     return tweet
-
-def tokenize(data):
-    tokenizer = Tokenizer()
-    tokenizer.fit_on_texts(data)
-    return np.array([np.array(data) for data in tokenizer.texts_to_sequences(data)])
