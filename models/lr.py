@@ -62,5 +62,6 @@ def tryLearnWithRand():
     heldout_df = heldout_df.drop(columns = ['out'])
     learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
 
-if(testWithRandData):
-    tryLearnWithRand()
+if __name__ == "__main__":
+    if(testWithRandData):
+        tryLearnWithRand()

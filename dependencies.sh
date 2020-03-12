@@ -2,6 +2,9 @@
 pip3 install pandas
 pip install pandas
 
+pip3 install pyspellchecker
+pip install pyspellchecker
+
 pip3 install scikit-learn
 pip install scikit-learn
 
