@@ -9,8 +9,10 @@ import numpy as np
 from nltk.corpus import stopwords
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-LOCATION = os.path.dirname(os.path.abspath(__file__))
 
+from DisasterTweets.log import get_logger
+LOCATION = os.path.dirname(os.path.abspath(__file__))
+log = get_logger('misc')
 import nltk
 #nltk.download('stopwords')
 #nltk.download('punkt')
@@ -68,11 +70,11 @@ def clean_tweet(tweet):
     tweet = remove_html(tweet)
     tweet = remove_emoji(tweet)
     tweet = remove_punct(tweet)
-    #tweet = correct_spellings(tweet)
+    tweet = correct_spellings(tweet)
     tweet = remove_stopwords(tweet)
     return tweet
 
-def tokenize_tweets(tweets, max_len=50):
+def tokenize_tweets(tweets, max_len=30):
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(tweets)
     sequences = tokenizer.texts_to_sequences(tweets)

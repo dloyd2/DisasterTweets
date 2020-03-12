@@ -1,6 +1,8 @@
 import inspect, os
 from datetime import datetime
-from DisasterTweets.utility import LOCATION
+from threading import Lock
+LOCATION = os.path.dirname(os.path.abspath(__file__))
+
 log_storage = LOCATION+'/logs/'
 if not os.path.exists(log_storage):
     os.mkdir(log_storage)
@@ -24,6 +26,7 @@ class Logger():
         self.filename = filename+'.log'
         self.path = path
         self.padding = '\t'
+        self.lock = Lock()
         caller_name = inspect.stack()[1][3]
         if caller_name.strip() != "get_logger":
             raise Exception('Use get_logger() to initalize a logger')
@@ -35,7 +38,9 @@ class Logger():
         Log each argument as a str, comma separated.
         Any input that can be turned into a str is valid
         '''
+        self.lock.acquire()
         new_entry = ", ".join([str(arg) for arg in args])
         f = open(self.path+self.filename, 'a')
         f.write("\n" + str(datetime.now()) + self.padding + new_entry)
         f.close()
+        self.lock.release()

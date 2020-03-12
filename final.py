@@ -11,10 +11,11 @@ from DisasterTweets.models import lr
 from DisasterTweets.neural_nets.nn_keras import run as run_keras
 #from neural_nets.nn_pytorch import run as run_pytorch
 #import utility
+ratio = 0.8 # how much of the data is training data. The rest is validation data
 path = LOCATION+'/data/'
 logger = get_logger('misc')
 funcs = {
-    'lr': lambda: print('TODO: run lr'),
+    'lr': lr.learn,
     'svm': lambda: print('TODO: run svm'),
     'knn': lambda: print('TODO: run knn'),
     'dt': lambda: print('TODO: run dt'),
@@ -49,52 +50,50 @@ else:
 
 
 def preprocess_tweets(train_data, result, index):
-    #logger.log('simplifying training data...')
+    logger.log('simplifying training data...')
    # print('thread {} is simplifying data'.format(index))
     simplified_train = [utility.clean_tweet(data[-1]) for data in train_data]
     #print(simplified_train)
-    #logger.log('tokenizing training data...')
+    logger.log('tokenizing training data...')
    # print('thread {} is tokenizing data'.format(index))
     tokenized_train = utility.tokenize_tweets(simplified_train)
     result[index] = tokenized_train
 
-num_threads = 20
+num_threads = 10
 results = [[]]*num_threads
-start = datetime.datetime.now()
 logger.log('reading in training data...')
 train_data = pandas.read_csv(path+'train.csv', header=0)
 train_data = train_data.to_numpy() # convert to numpy arrays
 logger.log('splitting out labels...')
-labels = np.array([[data[-1]] for data in train_data])
+labels = np.array([data[-1] for data in train_data])
 train_data = np.array([data[:4] for data in train_data])
+start = datetime.datetime.now()
+
 split = int(len(train_data)/num_threads)+1
 print('split:', split)
 threads = [Thread(target=preprocess_tweets, args=(train_data[i*split:(i+1)*split], results, i)) for i in range(num_threads)]
 for thread in threads:
     thread.start()
-ctr = 1
 for thread in threads:
-   # print('joining thread {}'.format(ctr))
     thread.join()
-    ctr+=1
 
 end = datetime.datetime.now()
-print('preprocessing time:', end-start)
+print('preprocessing time with {} threads: {}'.format(num_threads, end-start))
+
 all_tokens = []
 for result in results:
     all_tokens += list(result)
 all_tokens = np.array(all_tokens)
-#print(all_tokens[0])
-
-# data_filename = "tokens_1.txt"
-# f = open(LOCATION+'/data/'+data_filename, 'w')
-# json.dump(all_tokens, f)
-# f.close()
+split = int(len(all_tokens)*ratio)
+training_data = all_tokens[:split]
+training_labels = labels[:split]
+validation_data = all_tokens[split:]
+validation_labels = labels[split:]
 
 logger.log('running on the flags', flags)
 for flag in flags:
     try:
-        funcs[flag]()
+        funcs[flag](training_data, training_labels, validation_data, validation_labels)
     except KeyError:
         print('Key Error, ignoring flag {}'.format(flag))
 

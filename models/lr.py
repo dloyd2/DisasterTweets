@@ -6,8 +6,8 @@
 
 import numpy as np
 import pandas as pd
-from MLutils import separateOutput
-from MLutils import gen_rand_data
+#from MLutils import separateOutput
+#from MLutils import gen_rand_data
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
@@ -32,17 +32,17 @@ def get_datasets(filepath, train_ratio = 0.80):
     return train_data, heldout_data
 
 #try using base ML algorithm with randomly generated data
-def tryLRWithRand():
-    data = gen_rand_data(1000, 5)
-    train_df = data.sample(frac = 0.80)
-    heldout_df = data.loc[~data.index.isin(train_df.index)]
-    train_df, trainOut_df = separateOutput(train_df)
-    heldout_df, heldoutOut_df = separateOutput(heldout_df)
-    learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
+# def tryLRWithRand():
+#     data = gen_rand_data(1000, 5)
+#     train_df = data.sample(frac = 0.80)
+#     heldout_df = data.loc[~data.index.isin(train_df.index)]
+#     train_df, trainOut_df = separateOutput(train_df)
+#     heldout_df, heldoutOut_df = separateOutput(heldout_df)
+#     learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
 
 # TODO: Implement LR algorithm
 def learn(train, target, heldout_data, heldout_target):
-    clf = SGDClassifier(loss = 'log', max_iter = 1000)
+    clf = SGDClassifier(loss = 'log', max_iter = 100)
     clf.fit(train, target)
     print("Weights: ", clf.coef_)
     predictData = clf.predict(heldout_data)
