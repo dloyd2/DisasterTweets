@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
+from sklearn import make_classification
 
 # separate the target and the data into different datasets
 def separateOutput(data):
-    dataOut = data['out']
-    data = data.drop(columns = ['out'])
+    dataOut = data.iloc[:, -1]
+    data = data.iloc[:, :-1]
     return data, dataOut
 
 # generate random data for testing, separating out the data and its target output

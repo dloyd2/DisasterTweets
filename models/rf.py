@@ -1,24 +1,22 @@
 '''
     Matt Briones
-    Last Modified: Mar10, 2020
-    Description: Implements logistic regression using scikit-learn
+    March 10, 2020
+    Description: Implements a random forest algorithm using scikit-learn
 '''
-
 
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import SGDClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from DisasterTweets.log import get_logger
 from DisasterTweets.utility import LOCATION
 
-logger = get_logger('lr')
+logger = get_logger('rf')
 
 testWithRandData = False
 
 def run():
-    logger.log('running the lr algorithm')
+    logger.log('running the random forest algorithm')
     train_df, heldout_df = get_datasets(LOCATION+'/data/train.csv')
     train_df, trainOut_df = separateOutput(train_df)
     heldout_df, heldoutOut_df = separateOutput(heldout_df)
@@ -30,34 +28,35 @@ def get_datasets(filepath, train_ratio = 0.80):
     heldout_data = data.loc[~data.index.isin(train_data.index)]
     return train_data, heldout_data
 
-#try using base ML algorithm with randomly generated data
-# def tryLRWithRand():
-#     data = gen_rand_data(1000, 5)
-#     train_df = data.sample(frac = 0.80)
-#     heldout_df = data.loc[~data.index.isin(train_df.index)]
-#     train_df, trainOut_df = separateOutput(train_df)
-#     heldout_df, heldoutOut_df = separateOutput(heldout_df)
-#     learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
-
-# TODO: Implement LR algorithm
+# TODO: Change to Random Forest
 def learn(train, target, heldout_data, heldout_target):
-    iterations = 1 # Number of times testing model
+    n_est = 200
+    depth = 10
+    iterations = 1 #number of times testing model
     total = 0
-    max_MLiter = 500
     for i in range(iterations):
-        clf = SGDClassifier(loss = 'log', max_iter = max_MLiter)
+        clf = RandomForestClassifier(n_estimators = n_est, max_depth = depth)
         clf.fit(train, target)
-        print("Weights: ", clf.coef_)
         predictData = clf.predict(heldout_data)
         acc_score = accuracy_score(predictData, heldout_target)
         total += acc_score
         print("Accuracy Score: ", acc_score)
+    avg_acc = total / iterations
+    print("Average accuracy: ", avg_acc)
     logger.log("Number of times ran: " + str(iterations))
-    logger.log("Max iterations: " + str(max_MLiter))
-    logger.log("Average Accuracy: " + str(total / iterations))
+    logger.log("Number of trees: " + str(n_est))
+    logger.log("Max depth: " + str(depth))
+    logger.log("Average accuracy: " + str(avg_acc))
     return clf
 
-if __name__ == "__main__":
+#try using base ML algorithm with randomly generated data
+def trySVMWithRand():
+    data = gen_rand_data(1000, 5)
+    train_df = data.sample(frac = 0.80)
+    heldout_df = data.loc[~data.index.isin(train_df.index)]
+    train_df, trainOut_df = separateOutput(train_df)
+    heldout_df, heldoutOut_df = separateOutput(heldout_df)
+    learn(train_df, trainOut_df, heldout_df, heldoutOut_df)
 
-    if(testWithRandData):
-        tryLRWithRand()
+if(testWithRandData):
+    trySVMWithRand()

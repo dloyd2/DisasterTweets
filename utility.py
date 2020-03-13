@@ -70,7 +70,7 @@ def clean_tweet(tweet):
     tweet = remove_html(tweet)
     tweet = remove_emoji(tweet)
     tweet = remove_punct(tweet)
-    tweet = correct_spellings(tweet)
+    #tweet = correct_spellings(tweet)
     tweet = remove_stopwords(tweet)
     return tweet
 

@@ -1,14 +1,14 @@
 Daniel:
-    
+
     watch video about naive bayes
     data cleaning
 
 Matt:
     learn scikit-learn to the point to which he can explain it easily to us
-    logistic regression model done
+    logistic regression model *works with random data*
     naive bayes done
-    knn model done 
-    svm model done
+    knn model done
+    svm model *works with random data
+    random forest/decision trees
 
-Will: 
-    
+Will:

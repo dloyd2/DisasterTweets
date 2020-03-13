@@ -1,25 +1,23 @@
 '''
     Matt Briones
     Last Modified: Mar10, 2020
+    Description: Implements the SVM algorithm using scikit-learn
 '''
-
 
 import numpy as np
 import pandas as pd
-from MLutils import separateOutput
-from MLutils import gen_rand_data
 from sklearn import svm
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
-#from DisasterTweets.log import get_logger
-#from DisasterTweets.utility import LOCATION
+from DisasterTweets.log import get_logger
+from DisasterTweets.utility import LOCATION
 
-#logger = get_logger('lr')
+logger = get_logger('svm')
 
-testWithRandData = True
+testWithRandData = False
 
 def run():
-#    logger.log('running the lr algorithm')
+    logger.log('running the svm algorithm')
     train_df, heldout_df = get_datasets(LOCATION+'/data/train.csv')
     train_df, trainOut_df = separateOutput(train_df)
     heldout_df, heldoutOut_df = separateOutput(heldout_df)
@@ -33,13 +31,16 @@ def get_datasets(filepath, train_ratio = 0.80):
 
 # TODO: Change to SVM
 def learn(train, target, heldout_data, heldout_target):
-    ker = 'linear'
-    clf = SVC(kernel = ker)
+    ker = 'rbf'
+    clf = SVC(kernel = ker, gamma = 'scale')
     clf.fit(train, target)
     if(ker == 'linear'):
         print("Weights: ", clf.coef_)
     predictData = clf.predict(heldout_data)
-    print("Accuracy Score: ", accuracy_score(predictData, heldout_target))
+    acc_score = accuracy_score(predictData, heldout_target)
+    logger.log("Kernel: " + ker)
+    logger.log("Accuracy Score: " + str(acc_score))
+    print("Accuracy Score: ", acc_score)
     return clf
 
 #try using base ML algorithm with randomly generated data

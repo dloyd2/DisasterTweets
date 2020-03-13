@@ -8,6 +8,8 @@ from DisasterTweets.utility import LOCATION
 import DisasterTweets.utility as utility
 from DisasterTweets.log import get_logger
 from DisasterTweets.models import lr
+from DisasterTweets.models import svm
+from DisasterTweets.models import rf
 from DisasterTweets.neural_nets.nn_keras import run as run_keras
 #from neural_nets.nn_pytorch import run as run_pytorch
 #import utility
@@ -16,11 +18,11 @@ path = LOCATION+'/data/'
 logger = get_logger('misc')
 funcs = {
     'lr': lr.learn,
-    'svm': lambda: print('TODO: run svm'),
+    'svm': svm.learn,
     'knn': lambda: print('TODO: run knn'),
     'dt': lambda: print('TODO: run dt'),
     'nb': lambda: print('TODO: run nb'),
-    'rf': lambda: print('TODO: run rf'),
+    'rf': rf.learn,
     'nn': lambda: print('TODO: run nn'),
 }
 
